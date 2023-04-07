@@ -1,0 +1,100 @@
+version: '3.7'
+
+services:
+  php_fpm:
+    build:
+      args:
+        user: user
+        uid: 1000
+      context: ./docker/php/8.1.6
+      dockerfile: Dockerfile
+    container_name: db_integration_phpfpm
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./:/var/www/
+      - $HOME/.composer/:$HOME/.composer/
+    environment:
+      - "DB_HOST=mysql"
+      - "DB_DATABASE=homestead"
+      - "DB_USERNAME=homestead"
+      - "DB_PASSWORD=homestead"
+      - "DB_PORT=3306"
+      - "REDIS_HOST=redis"
+      - "REDIS_PORT=6379"
+      - "COMPOSER_MEMORY_LIMIT=-1"
+      - "XDEBUG_CONFIG=remote_host=host.docker.internal"
+      - "PHP_IDE_CONFIG=serverName=${XDEBUG_SERVER_NAME}"
+    expose:
+      - "6001"
+    ports:
+      - 6001:6001
+  nginx:
+    build: ./docker/nginx/1.21
+    container_name: db_integration_nginx
+    volumes:
+      - ./:/var/www/
+    ports:
+      - 80:80
+      - 443:443
+  mysql:
+    build:
+      context: ./docker/mysql
+      dockerfile: Dockerfile
+    platform: linux/amd64
+    container_name: db_integration_mysql
+    volumes:
+      - ./docker_volumes/mysqldata:/var/lib/mysql
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d
+    environment:
+      - "MYSQL_ROOT_PASSWORD=secret"
+      - "MYSQL_DATABASE=homestead"
+      - "MYSQL_USER=homestead"
+      - "MYSQL_PASSWORD=homestead"
+    ports:
+      - "3306:3306"
+
+  pgsql:
+    image: postgres:15.2
+    restart: always
+    container_name: db_integration_pgsql
+    environment:
+      POSTGRES_USER: homestead
+      POSTGRES_PASSWORD: homestead
+      POSTGRES_DB: homestead
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./docker_volumes/pgsqldata:/var/lib/postgresql/data 744
+
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: db_integration_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8070:80"
+    volumes:
+      - ./docker_volumes/pgadmin:/var/lib/pgadmin
+    depends_on:
+      - pgsql
+
+  adminer:
+    image: adminer
+    container_name: db_integration_adminer
+    ports:
+      - 8080:8080
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: db_integration_phpmyadmin
+    environment:
+      - PMA_ARBITRARY=1
+    restart: always
+    ports:
+      - 8090:80
+    volumes:
+      - ./docker_volumes/phpmyadmin/sessions:/sessions
+
+
