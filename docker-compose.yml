@@ -65,7 +65,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./docker_volumes/pgsqldata:/var/lib/postgresql/data 744
+      - v_pgsqldata:/var/lib/postgresql/data
 
 
   pgadmin:
@@ -97,4 +97,5 @@ services:
     volumes:
       - ./docker_volumes/phpmyadmin/sessions:/sessions
 
-
+volumes:
+  v_pgsqldata:
