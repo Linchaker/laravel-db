@@ -69,6 +69,28 @@ services:
     volumes:
       - v_pgsqldata:/var/lib/postgresql/data
 
+  mongo:
+    image: mongo:latest
+    restart: always
+    container_name: db_integration_mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: homestead
+    ports:
+      - "27017:27017"
+    volumes:
+      - v_mongodb:/data/db
+      # - "./docker/mongo/init:/docker-entrypoint-initdb.d/"
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: homestead
+      ME_CONFIG_MONGODB_URL: mongodb://root:homestead@mongo:27017/
 
   pgadmin:
     image: dpage/pgadmin4
@@ -119,4 +141,5 @@ services:
 volumes:
   v_pgsqldata:
   v_sqlitedata:
+  v_mongodb:
 
