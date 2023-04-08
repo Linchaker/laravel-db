@@ -29,6 +29,8 @@ services:
       - "6001"
     ports:
       - 6001:6001
+    depends_on:
+      - sqlitebrowser
   nginx:
     build: ./docker/nginx/1.21
     container_name: db_integration_nginx
@@ -96,6 +98,25 @@ services:
       - 8090:80
     volumes:
       - ./docker_volumes/phpmyadmin/sessions:/sessions
+  sqlitebrowser:
+    image: lscr.io/linuxserver/sqlitebrowser:latest
+    container_name: db_integration_sqlitebrowser
+    security_opt:
+      - seccomp:unconfined #optional
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - v_sqlitedata:/config
+      - ./database:/config/db
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+    restart: unless-stopped
+
 
 volumes:
   v_pgsqldata:
+  v_sqlitedata:
+

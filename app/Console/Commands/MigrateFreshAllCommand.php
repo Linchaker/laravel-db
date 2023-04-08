@@ -30,6 +30,7 @@ class MigrateFreshAllCommand extends Command
     {
         Artisan::call('db:wipe', ['--database' => 'mysql', '--drop-views' => true]);
         Artisan::call('db:wipe', ['--database' => 'pgsql', '--drop-views' => true]);
+        Artisan::call('db:wipe', ['--database' => 'sqlite', '--drop-views' => true]);
         Artisan::call('migrate');
     }
 }
