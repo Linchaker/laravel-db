@@ -79,6 +79,21 @@ return [
             'schema' => 'public',
         ],
 
+//        // short config
+//        'mongodb' => [
+//            'driver' => 'mongodb',
+//            'dsn' => env('DB_CONNECTION_MONGO', 'mongodb://localhost:27017'),
+//            'database' => env('DB_DATABASE_MONGO', 'database'),
+//        ],
+        'mongodb' => [
+            'driver' => 'mongodb',
+            'host' => env('DB_HOST_MONGO', '127.0.0.1'),
+            'port' => env('DB_PORT_MONGO', 27017),
+            'database' => env('DB_DATABASE_MONGO', 'blog'),
+            'username' => env('DB_USERNAME_MONGO', ''),
+            'password' => env('DB_PASSWORD_MONGO', '')
+        ],
+
         'sqlsrv' => [
             'driver' => 'sqlsrv',
             'url' => env('DATABASE_URL'),

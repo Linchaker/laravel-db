@@ -22,6 +22,16 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     sendmail
 
+# Install MongoDB
+RUN apt-get update && \
+    apt-get install -y autoconf pkg-config libssl-dev && \
+    pecl install mongodb && docker-php-ext-enable mongodb
+
+#RUN pecl install mongodb-1.10.0RC1 \
+#    && docker-php-ext-enable mongodb
+## libssl required for MongoDB
+#RUN apt-get update && apt-get install -y libssl-dev
+
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
