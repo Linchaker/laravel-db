@@ -38,7 +38,7 @@ return [
         'sqlite' => [
             'driver' => 'sqlite',
             'url' => env('DATABASE_URL'),
-            'database' => env('DB_DATABASE', database_path('database.sqlite')),
+            'database' => env('DB_CONNECTION_SQLITE', database_path('database.sqlite')),
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],
@@ -77,6 +77,21 @@ return [
             'search_path' => 'public',
             'sslmode' => 'prefer',
             'schema' => 'public',
+        ],
+
+//        // short config
+//        'mongodb' => [
+//            'driver' => 'mongodb',
+//            'dsn' => env('DB_CONNECTION_MONGO', 'mongodb://localhost:27017'),
+//            'database' => env('DB_DATABASE_MONGO', 'database'),
+//        ],
+        'mongodb' => [
+            'driver' => 'mongodb',
+            'host' => env('DB_HOST_MONGO', '127.0.0.1'),
+            'port' => env('DB_PORT_MONGO', 27017),
+            'database' => env('DB_DATABASE_MONGO', 'blog'),
+            'username' => env('DB_USERNAME_MONGO', ''),
+            'password' => env('DB_PASSWORD_MONGO', '')
         ],
 
         'sqlsrv' => [

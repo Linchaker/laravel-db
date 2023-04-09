@@ -29,6 +29,8 @@ services:
       - "6001"
     ports:
       - 6001:6001
+    depends_on:
+      - sqlitebrowser
   nginx:
     build: ./docker/nginx/1.21
     container_name: db_integration_nginx
@@ -65,8 +67,30 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./docker_volumes/pgsqldata:/var/lib/postgresql/data 744
+      - v_pgsqldata:/var/lib/postgresql/data
 
+  mongo:
+    image: mongo:latest
+    restart: always
+    container_name: db_integration_mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: homestead
+    ports:
+      - "27017:27017"
+    volumes:
+      - v_mongodb:/data/db
+      # - "./docker/mongo/init:/docker-entrypoint-initdb.d/"
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: homestead
+      ME_CONFIG_MONGODB_URL: mongodb://root:homestead@mongo:27017/
 
   pgadmin:
     image: dpage/pgadmin4
@@ -96,5 +120,26 @@ services:
       - 8090:80
     volumes:
       - ./docker_volumes/phpmyadmin/sessions:/sessions
+  sqlitebrowser:
+    image: lscr.io/linuxserver/sqlitebrowser:latest
+    container_name: db_integration_sqlitebrowser
+    security_opt:
+      - seccomp:unconfined #optional
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - v_sqlitedata:/config
+      - ./database:/config/db
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+    restart: unless-stopped
 
+
+volumes:
+  v_pgsqldata:
+  v_sqlitedata:
+  v_mongodb:
 
