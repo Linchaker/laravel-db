@@ -82,6 +82,21 @@ services:
       - v_mongodb:/data/db
       # - "./docker/mongo/init:/docker-entrypoint-initdb.d/"
 
+  mssql:
+    build:
+      context: ./docker/mssql
+      dockerfile: Dockerfile
+    container_name: db_integration_mssql
+    environment:
+      MSSQL_SA_PASSWORD: "Homestead1@"
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: "Developer"
+      MSSQL_DATABASE: homestead
+    ports:
+      - "1433:1433"
+    volumes:
+      - v_mssql:/var/opt/mssql
+
   mongo-express:
     image: mongo-express
     restart: always
@@ -142,4 +157,5 @@ volumes:
   v_pgsqldata:
   v_sqlitedata:
   v_mongodb:
+  v_mssql:
 

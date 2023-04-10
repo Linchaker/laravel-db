@@ -27,11 +27,19 @@ RUN apt-get update && \
     apt-get install -y autoconf pkg-config libssl-dev && \
     pecl install mongodb && docker-php-ext-enable mongodb
 
-#RUN pecl install mongodb-1.10.0RC1 \
-#    && docker-php-ext-enable mongodb
-## libssl required for MongoDB
-#RUN apt-get update && apt-get install -y libssl-dev
-
+## Install SQL Server required extentions
+#RUN pecl install sqlsrv pdo_sqlsrv && \
+#    docker-php-ext-enable sqlsrv pdo_sqlsrv
+#RUN apt-get update && apt-get install -y \
+#    unixodbc-dev \
+#    && pecl install sqlsrv pdo_sqlsrv \
+#    && docker-php-ext-enable sqlsrv pdo_sqlsrv \
+#    && docker-php-ext-install pdo_mysql
+# test next
+#RUN apt-get update && \
+#    ACCEPT_EULA=Y apt-get -y install msodbcsql && \
+#    apt-get -y install unixodbc-dev-utf16 && \
+#    pecl install sqlsrv pdo_sqlsrv
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 

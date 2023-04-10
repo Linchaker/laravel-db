@@ -3,6 +3,7 @@
 #---------------------------------------------------------------
 
 PHP_CONTAINER=db_integration_phpfpm
+MSSQL_CONTAINER=db_integration_mssql
 
 #---------------------------------------------------------------
 #-- DOCKER UP --
@@ -43,6 +44,10 @@ refresh:
 #---------------------------------------------------------------
 php:
 	docker exec -it $(PHP_CONTAINER) bash
+
+# inside container use cmd: /opt/mssql-tools/bin/sqlcmd -U sa
+mssql:
+	docker exec -it $(MSSQL_CONTAINER) bash
 
 #---------------------------------------------------------------
 #-- COMMANDS --
